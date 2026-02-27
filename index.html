@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login / Sign Up</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="profile.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="auth-wrapper">
+    <div class="auth-hero">
+  <h1>Welcome to UniPortal</h1>
+  <p>
+    Access your academic space, manage your courses, 
+    and stay connected with your university in one place.
+  </p>
+</div>
+<div class="auth-card">
+
+    
+
+   <form id="mainForm" novalidate>
+  <h2>Create Your Profile</h2>
+
+  <div class="form-message" id="formMessage"></div>
+
+  <!-- Image -->
+  <div class="input-group">
+  <label for="profileImage">Profile Image</label>
+
+  <div class="image-upload">
+    <input type="file" id="profileImage" accept="image/*" required hidden>
+    <label for="profileImage" class="upload-box">
+      <span id="uploadText">Click to upload image</span>
+    </label>
+  </div>
+</div>
+
+  <!-- Name -->
+  <div class="input-group">
+    <label for="fullname">Full Name</label>
+    <input type="text" id="fullname" required>
+  </div>
+
+  <!-- Username -->
+  <div class="input-group">
+    <label for="username">Username</label>
+    <input type="text" id="username" required>
+  </div>
+
+  <!-- Password -->
+  <div class="input-group">
+    <label for="password">Password</label>
+    <input type="password" id="password" minlength="6" required>
+  </div>
+
+  <!-- Email -->
+  <div class="input-group">
+    <label for="email">Email</label>
+    <input type="email" id="email" required>
+  </div>
+
+  <!-- Phone -->
+  <div class="input-group">
+    <label for="phone">Phone Number</label>
+    <input type="tel" id="phone" required>
+  </div>
+
+  <!-- Radio -->
+  <div class="input-group">
+  <label>Gender</label>
+
+  <div class="gender-options">
+    <label class="gender-card">
+      <input type="radio" name="gender" value="Male" required>
+      <span>Male</span>
+    </label>
+
+    <label class="gender-card">
+      <input type="radio" name="gender" value="Female">
+      <span>Female</span>
+    </label>
+  </div>
+</div>
+
+  <!-- Select -->
+  <div class="input-group">
+  <label for="level">Study Level</label>
+  <div class="select-wrapper">
+    <select id="level" required>
+      <option value="">Select Level</option>
+      <option>License</option>
+      <option>Master</option>
+      <option>PhD</option>
+    </select>
+  </div>
+</div>
+
+  <!-- Extra Creative Input -->
+  <div class="input-group">
+    <label for="bio">Short Bio</label>
+    <textarea id="bio" rows="3" placeholder="Tell us something about yourself..."></textarea>
+  </div>
+
+  <button type="submit" class="auth-btn">Submit</button>
+</form>
+
+    </div>
+  </div>
+
+<script>
+const form = document.getElementById("mainForm");
+
+/* ================= HELPERS ================= */
+
+function showMessage(message, type) {
+  const box = document.getElementById("formMessage");
+  box.textContent = message;
+  box.className = `form-message ${type}`;
+  box.style.display = "block";
+}
+
+function hideMessage() {
+  const box = document.getElementById("formMessage");
+  box.textContent = "";
+  box.style.display = "none";
+  box.className = "form-message";
+}
+
+function clearInputErrors() {
+  form.querySelectorAll("input, select, textarea").forEach(input => {
+    input.classList.remove("input-error");
+  });
+}
+
+function isValidEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+/* Hide message when typing again */
+form.querySelectorAll("input, select, textarea").forEach(input => {
+  input.addEventListener("input", () => {
+    hideMessage();
+  });
+});
+
+/* ================= FORM SUBMIT ================= */
+
+form.addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  clearInputErrors();
+  hideMessage();
+
+  const imageInput = document.getElementById("profileImage");
+  const fullname = document.getElementById("fullname");
+  const username = document.getElementById("username");
+  const password = document.getElementById("password");
+  const email = document.getElementById("email");
+  const phone = document.getElementById("phone");
+  const gender = document.querySelector('input[name="gender"]:checked');
+  const level = document.getElementById("level");
+  const bio = document.getElementById("bio");
+
+  let hasError = false;
+
+  /* IMAGE */
+  if (!imageInput.files.length) {
+    showMessage("Please upload a profile image.", "error");
+    imageInput.classList.add("input-error");
+    hasError = true;
+  }
+
+  /* TEXT FIELDS */
+  if (!fullname.value.trim()) {
+    fullname.classList.add("input-error");
+    hasError = true;
+  }
+
+  if (!username.value.trim()) {
+    username.classList.add("input-error");
+    hasError = true;
+  }
+
+  if (!password.value.trim() || password.value.length < 6) {
+    password.classList.add("input-error");
+    hasError = true;
+  }
+
+  if (!email.value.trim() || !isValidEmail(email.value.trim())) {
+    email.classList.add("input-error");
+    hasError = true;
+  }
+
+  if (!phone.value.trim()) {
+    phone.classList.add("input-error");
+    hasError = true;
+  }
+
+  if (!gender) {
+    showMessage("Please select your gender.", "error");
+    hasError = true;
+  }
+
+  if (!level.value.trim()) {
+    level.classList.add("input-error");
+    hasError = true;
+  }
+
+
+  if (hasError) {
+    showMessage("Please complete all required fields correctly.", "error");
+    return;
+  }
+
+  /* ================= IF VALID ================= */
+
+  const reader = new FileReader();
+
+  reader.onload = function() {
+    const data = {
+      image: reader.result,
+      fullname: fullname.value,
+      username: username.value,
+      password: password.value,
+      email: email.value,
+      phone: phone.value,
+      gender: gender.value,
+      level: level.value,
+      bio: bio.value
+    };
+
+    localStorage.setItem("formData", JSON.stringify(data));
+
+    showMessage("🎉 Form submitted successfully!", "success");
+
+    setTimeout(() => {
+      window.location.href = "success.html";
+    }, 1000);
+  };
+
+  reader.readAsDataURL(imageInput.files[0]);
+});
+const imageInput = document.getElementById("profileImage");
+const uploadText = document.getElementById("uploadText");
+const uploadBox = document.querySelector(".upload-box");
+
+imageInput.addEventListener("change", function(){
+  if (this.files.length > 0) {
+    uploadText.textContent = this.files[0].name;
+    uploadBox.classList.add("image-selected");
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Profile Summary</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <h2>Your Submitted Information</h2>
+
+    <div id="output"></div>
+
+    <button class="auth-btn" onclick="goBack()">Back</button>
+  </div>
+</div>
+
+<script>
+const data = JSON.parse(localStorage.getItem("formData"));
+const output = document.getElementById("output");
+
+if(data){
+  output.innerHTML = `
+  <div class="profile-summary">
+
+    <div class="profile-header">
+      <img src="${data.image}" class="profile-img">
+      <h3>${data.fullname}</h3>
+      <p class="username">@${data.username}</p>
+    </div>
+
+    <div class="profile-info">
+      <div class="info-row">
+        <span>Email</span>
+        <strong>${data.email}</strong>
+      </div>
+
+      <div class="info-row">
+        <span>Phone</span>
+        <strong>${data.phone}</strong>
+      </div>
+
+      <div class="info-row">
+        <span>Gender</span>
+        <strong>${data.gender}</strong>
+      </div>
+
+      <div class="info-row">
+        <span>Study Level</span>
+        <strong>${data.level}</strong>
+      </div>
+
+      <div class="info-row">
+        <span>Password</span>
+        <strong>••••••••</strong>
+      </div>
+
+      <div class="bio-box">
+        <span>Bio</span>
+        <p>${data.bio}</p>
+      </div>
+
+    </div>
+  </div>
+`;
+}
+
+function goBack(){
+  window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>
