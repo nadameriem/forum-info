@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
+<button class="theme-toggle" onclick="toggleTheme()">🌙</button>
   <div class="auth-wrapper">
     <div class="auth-hero">
   <h1>Welcome to UniPortal</h1>
@@ -111,6 +111,17 @@
   </div>
 
 <script>
+  window.addEventListener("DOMContentLoaded", () => {
+  const savedTheme = localStorage.getItem("theme");
+  const button = document.querySelector(".theme-toggle");
+
+  if (savedTheme === "dark") {
+    document.body.classList.add("dark");
+    button.textContent = "☀";
+  } else {
+    button.textContent = "🌙";
+  }
+});
 const form = document.getElementById("mainForm");
 
 /* ================= HELPERS ================= */
@@ -254,6 +265,21 @@ imageInput.addEventListener("change", function(){
     uploadBox.classList.add("image-selected");
   }
 });
+
+function toggleTheme() {
+  const body = document.body;
+  const button = document.querySelector(".theme-toggle");
+
+  body.classList.toggle("dark");
+
+  if (body.classList.contains("dark")) {
+    localStorage.setItem("theme", "dark");
+    button.textContent = "☀";
+  } else {
+    localStorage.setItem("theme", "light");
+    button.textContent = "🌙";
+  }
+}
 </script>
 </body>
 </html>
